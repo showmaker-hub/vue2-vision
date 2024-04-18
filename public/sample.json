@@ -1,0 +1,96 @@
+[{
+  "FAMILY": "xuanwu15",
+  "FLOOR_LOCATION": "J1.04.07",
+  "MONUMBER": "J9BX442047AA",
+  "MT": "7DH7",
+  "MTSN": "J901KLDA",
+  "SEO": "7DH7000MCN",
+  "SONUMBER": "AD20003435",
+  "UTP_IP": "172.40.0.10",
+  "UWIP_SN": "1S7DH7CTO1WWJ901KLDA",
+  "current_op": "fvt",
+  "mtime": [
+    1712736386.60431,
+    "/dfcxact/mtsn/J901KLDA/rt/variables"
+  ],
+  "pgmname": "kktest",
+  "prcstat": "RUNNING"
+},
+{
+  "FAMILY": "xuanwu15",
+  "FLOOR_LOCATION": "I1.04.06",
+  "MONUMBER": "J9BX442047AA",
+  "MT": "7DH7",
+  "MTSN": "J901KLDA",
+  "SEO": "7DH7000MCN",
+  "SONUMBER": "AD20003435",
+  "UTP_IP": "172.40.0.10",
+  "UWIP_SN": "1S7DH7CTO1WWJ901KLDA",
+  "current_op": "fvt",
+  "mtime": [
+    1712736386.60431,
+    "/dfcxact/mtsn/J901KLDA/rt/variables"
+  ],
+  "pgmname": "kktest",
+  "prcstat": "ATTEND"
+},
+{
+  "FAMILY": "xuanwu15",
+  "FLOOR_LOCATION": "H1.04.06",
+  "MONUMBER": "J9BX442047AA",
+  "MT": "7DH7",
+  "MTSN": "J901KLDA",
+  "SEO": "7DH7000MCN",
+  "SONUMBER": "AD20003435",
+  "UTP_IP": "172.40.0.10",
+  "UWIP_SN": "1S7DH7CTO1WWJ901KLDA",
+  "current_op": "fvt",
+  "mtime": [
+    1712736386.60431,
+    "/dfcxact/mtsn/J901KLDA/rt/variables"
+  ],
+  "pgmname": "kktest",
+  "prcstat": "FAILED"
+},
+{
+  "FAMILY": "xiangyang",
+  "FLOOR_LOCATION": "M1.03.07",
+  "L2_NETWORK_L1_IP": "10.189.226.101",
+  "MONUMBER": "J9BX43W0EB00",
+  "MT": "7DC9",
+  "MTSN": "J901KEYW",
+  "SEO": "7DC9A018CN",
+  "SONUMBER": "C000069127",
+  "UTP_IP": "10.189.226.101",
+  "UWIP_SN": "1S7DC9CTO1WWJ901KEYW",
+  "current_op": "fvt",
+  "mqt1_loops": 1,
+  "mtime": [
+    1712764116.78754,
+    "/dfcxact/mtsn/J901KEYW/rt/variables"
+  ],
+  "op_passcount": 3,
+  "pgmname": "hypwr_off_fvt.py",
+  "prcstat": "PASSED"
+},
+{
+  "FAMILY": "xiangyang",
+  "FLOOR_LOCATION": "M2.01.03",
+  "L2_NETWORK_L1_IP": "10.189.226.105",
+  "MONUMBER": "J9BX44303300",
+  "MT": "7DC9",
+  "MTSN": "J901KL0C",
+  "SEO": "7DC9A00WCN",
+  "SONUMBER": "C000069130",
+  "UTP_IP": "10.189.226.105",
+  "UWIP_SN": "1S7DC9CTO1WWJ901KL0C",
+  "current_op": "runin",
+  "mqt1_loops": 1,
+  "mtime": [
+    1712907488.84767,
+    "/dfcxact/mtsn/J901KL0C/utp.lcr"
+  ],
+  "op_passcount": 1,
+  "pgmname": "imm_log.py",
+  "prcstat": "RUNNING"
+}]
