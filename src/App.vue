@@ -11,26 +11,26 @@
         <tbody>
           <tr v-for="row in area_heigh" :key="row">
             <td v-for="col in area_detail" :key="col" :class="{
-              'blue-cell': area_values[`${active_area_table}.${col}.0${row}`]['prcstat'] == 'RUNNING',
-              'blue-cell-on': area_values[`${active_area_table}.${col}.0${row}`]['prcstat'] == 'os_power_cycle',
-              'yellow-cell': area_values[`${active_area_table}.${col}.0${row}`]['prcstat'] == 'ATTEND',
-              'red-cell': area_values[`${active_area_table}.${col}.0${row}`]['prcstat'] == 'FAILED',
-              'green-cell': area_values[`${active_area_table}.${col}.0${row}`]['prcstat'] == 'PASSED',
+              'blue-cell': area_values[`${active_area_table}.${col}.${row}`]['prcstat'] == 'RUNNING',
+              'blue-cell-on': area_values[`${active_area_table}.${col}.${row}`]['prcstat'] == 'os_power_cycle',
+              'yellow-cell': area_values[`${active_area_table}.${col}.${row}`]['prcstat'] == 'ATTEND',
+              'red-cell': area_values[`${active_area_table}.${col}.${row}`]['prcstat'] == 'FAILED',
+              'green-cell': area_values[`${active_area_table}.${col}.${row}`]['prcstat'] == 'PASSED',
             }">
-              <div v-if="area_values[`${active_area_table}.${col}.0${row}`]['MTSN']">
+              <div v-if="area_values[`${active_area_table}.${col}.${row}`]['MTSN']">
                 <div>
-                  <span>{{ area_values[`${active_area_table}.${col}.0${row}`]['MTSN'] }}</span>
-                  <span class="span-on-right">{{ area_values[`${active_area_table}.${col}.0${row}`]['current_op'] }}</span>
+                  <span>{{ area_values[`${active_area_table}.${col}.${row}`]['MTSN'] }}</span>
+                  <span class="span-on-right">{{ area_values[`${active_area_table}.${col}.${row}`]['current_op'] }}</span>
                 </div>
                 <div>
-                  <span>{{ area_values[`${active_area_table}.${col}.0${row}`]['FAMILY'] }}</span>
-                  <span class="span-on-right">{{ area_values[`${active_area_table}.${col}.0${row}`]['MT'] }}</span>
+                  <span>{{ area_values[`${active_area_table}.${col}.${row}`]['FAMILY'] }}</span>
+                  <span class="span-on-right">{{ area_values[`${active_area_table}.${col}.${row}`]['MT'] }}</span>
                 </div>
                 <div>
-                  <span>{{ area_values[`${active_area_table}.${col}.0${row}`]['pgmname'] }}</span>
+                  <span>{{ area_values[`${active_area_table}.${col}.${row}`]['pgmname'] }}</span>
                 </div>
                 <div>
-                  <span>{{ area_values[`${active_area_table}.${col}.0${row}`]['MONUMBER'] }}</span>
+                  <span>{{ area_values[`${active_area_table}.${col}.${row}`]['MONUMBER'] }}</span>
                 </div>
               </div>
             </td>
@@ -50,11 +50,11 @@
           <tbody>
             <tr v-for="row in area_heigh" :key="row">
               <td v-for="col in area_table" :key="col" :class="{
-                'blue-cell': area_values[`${area_category}${area_table_idx}.${col}.0${row}`]['prcstat'] == 'RUNNING',
-                'blue-cell-on': area_values[`${area_category}${area_table_idx}.${col}.0${row}`]['prcstat'] == 'os_power_cycle',
-                'yellow-cell': area_values[`${area_category}${area_table_idx}.${col}.0${row}`]['prcstat'] == 'ATTEND',
-                'red-cell': area_values[`${area_category}${area_table_idx}.${col}.0${row}`]['prcstat'] == 'FAILED',
-                'green-cell': area_values[`${area_category}${area_table_idx}.${col}.0${row}`]['prcstat'] == 'PASSED',
+                'blue-cell': area_values[`${area_category}${area_table_idx}.${col}.${row}`]['prcstat'] == 'RUNNING',
+                'blue-cell-on': area_values[`${area_category}${area_table_idx}.${col}.${row}`]['prcstat'] == 'os_power_cycle',
+                'yellow-cell': area_values[`${area_category}${area_table_idx}.${col}.${row}`]['prcstat'] == 'ATTEND',
+                'red-cell': area_values[`${area_category}${area_table_idx}.${col}.${row}`]['prcstat'] == 'FAILED',
+                'green-cell': area_values[`${area_category}${area_table_idx}.${col}.${row}`]['prcstat'] == 'PASSED',
               }"></td>
             </tr>
           </tbody>
@@ -97,7 +97,7 @@ export default {
       active_area_table: 'H1',
       area_detail: {},
       area_category_arr: ['H', 'I', 'J', 'K'],
-      area_heigh: 8,
+      area_heigh: ['08', '07', '06', '05', '04', '03', '02', '01'],
     };
   },
   created() {
@@ -145,9 +145,8 @@ export default {
         });
     },
     show_detail(area_table_name) {
-      console.log(area_table_name);
       this.active_area_table = area_table_name;
-      this.area_detail = this.area_strus[area_table_name[0]][area_table_name[1]];
+      this.area_detail = [ ... this.area_strus[area_table_name[0]][area_table_name[1]]];
       if (area_table_name[0] == 'I') {
         this.area_detail.reverse();
       }
