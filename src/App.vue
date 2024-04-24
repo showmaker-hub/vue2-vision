@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div id="div-detail" v-if="detail_visible">
-      <button @click="hide_detail">返回一级界面</button>
+      <button @click="hide_detail">返回上级界面</button>
       <div id="table-detail-parent">
         <table id="table-detail" border="1" cellspacing="0">
           <thead>
@@ -15,21 +15,23 @@
                 'blue-cell': area_values[`${active_area_table}.${col}.${row}`]['prcstat'] == 'RUNNING',
                 'yellow-cell': area_values[`${active_area_table}.${col}.${row}`]['prcstat'] == 'ATTEND',
                 'red-cell': area_values[`${active_area_table}.${col}.${row}`]['prcstat'] == 'FAILED',
+                'blue-cell-on': area_values[`${active_area_table}.${col}.${row}`]['prcstat'] == 'os_power_cycle',
+                'green-cell': area_values[`${active_area_table}.${col}.${row}`]['prcstat'] == 'PASSED',
               }">
                 <div v-if="area_values[`${active_area_table}.${col}.${row}`]['MTSN']">
                   <div>
-                    <span>{{ area_values[`${active_area_table}.${col}.${row}`]['MTSN'] }}</span>
-                    <span class="span-on-right">{{ area_values[`${active_area_table}.${col}.${row}`]['current_op'] }}</span>
+                    <b><span>{{ area_values[`${active_area_table}.${col}.${row}`]['MTSN'] }}</span></b>
+                    <b><span class="span-on-right">{{ area_values[`${active_area_table}.${col}.${row}`]['current_op'] }}</span></b>
                   </div>
                   <div>
-                    <span>{{ area_values[`${active_area_table}.${col}.${row}`]['FAMILY'] }}</span>
-                    <span class="span-on-right">{{ area_values[`${active_area_table}.${col}.${row}`]['MT'] }}</span>
+                    <b><span>{{ area_values[`${active_area_table}.${col}.${row}`]['FAMILY'] }}</span></b>
+                    <b><span class="span-on-right">{{ area_values[`${active_area_table}.${col}.${row}`]['MT'] }}</span></b>
                   </div>
                   <div>
-                    <span>{{ area_values[`${active_area_table}.${col}.${row}`]['pgmname'] }}</span>
+                    <b><span>{{ area_values[`${active_area_table}.${col}.${row}`]['pgmname'] }}</span></b>
                   </div>
                   <div>
-                    <span>{{ area_values[`${active_area_table}.${col}.${row}`]['MONUMBER'] }}</span>
+                    <b><span>{{ area_values[`${active_area_table}.${col}.${row}`]['MONUMBER'] }}</span></b>
                   </div>
                 </div>
               </td>
@@ -39,6 +41,21 @@
       </div>
     </div>
     <div class="table-container">
+
+      <div style="text-align: center; font-size: 20px;">  
+    <b><span>Total：</span></b>
+    <span style="margin-left: 10px;">{{ totalCount }}</span>  
+  
+    <b><span style="margin-left: 50px;">Running：</span></b>
+    <span :style="{ color: runningCount > 0 ? 'blue' : 'inherit' }">{{ runningCount }}</span>  
+
+    <b><span style="margin-left: 50px;">Fail：</span></b>
+    <span :style="{ color: failCount > 0 ? 'red' : 'inherit' }">{{ failCount }}</span>  
+
+    <b><span style="margin-left: 50px;">Attend：</span></b>
+    <span :style="{ color: attendCount > 0 ? 'yellow' : 'inherit' }">{{ attendCount }}</span>  
+</div>
+
       <div class="row" v-for="(area_category_group, area_category_group_idx) in area_category_arr" :key="area_category_group_idx">
         <span class="row-son"
           :class="{'row-son-left': area_category_idx > 0}"
@@ -57,6 +74,8 @@
                   'blue-cell': area_values[`${area_category}${area_table_idx}.${col}.${row}`]['prcstat'] == 'RUNNING',
                   'yellow-cell': area_values[`${area_category}${area_table_idx}.${col}.${row}`]['prcstat'] == 'ATTEND',
                   'red-cell': area_values[`${area_category}${area_table_idx}.${col}.${row}`]['prcstat'] == 'FAILED',
+                  'blue-cell-on': area_values[`${area_category}${area_table_idx}.${col}.${row}`]['prcstat'] == 'os_power_cycle',
+                  'green-cell': area_values[`${area_category}${area_table_idx}.${col}.${row}`]['prcstat'] == 'PASSED',
                 }"></td>
               </tr>
             </tbody>
@@ -112,16 +131,16 @@ export default {
           '2': 4,
         },
         'E': {
-          '1': 6,
-          '2': 4,
-          '3': 6,
-          '4': 6,
+          '1': 7,
+          '2': 8,
+          '3': 7,
+          '4': 5,
         },
         'F': {
-          '1': 6,
-          '2': 4,
-          '3': 6,
-          '4': 6,
+          '1': 8,
+          '2': 7,
+          '3': 8,
+          '4': 5,
         }
       },
       area_strus: {},
@@ -131,8 +150,12 @@ export default {
       area_detail: {},
       area_category_arr: [['B', 'H'], ['C', 'I'], ['D', 'J'], ['E', 'K'], ['F']],
       area_heigh: ['08', '07', '06', '05', '04', '03', '02', '01'],
+      failCount: 0,
+      runningCount: 0,
+      
     };
   },
+
   created() {
     this.fillAreaData();
   },
@@ -160,7 +183,11 @@ export default {
       }
     },
     fetchData() {
-      fetch('http://localhost:8080/sample.json')
+      let newFailCount = -2;
+      let newRunningCount = 0;
+      let newAttendCount = -2;
+      let newTotalCount = 0;
+      fetch('https://10.189.224.111/svrvision/lssc_l2_rethinkdb_data/')
         .then(response => response.json())
         .then(data => {
           this.fillAreaData();
@@ -168,9 +195,23 @@ export default {
           for (let i in data) {
             if (data[i]['FAMILY'] == 'xuanwu15') {
               this.area_values[data[i]['FLOOR_LOCATION']] = data[i];
+              newTotalCount++;
+              if (data[i]['prcstat'] == 'FAILED') {
+                newFailCount++;
+                } else if (data[i]['prcstat'] == 'RUNNING' || data[i]['prcstat'] == 'os_power_cycle' ) {
+                  newRunningCount++;
+                }
+                if (data[i]['prcstat'] == 'ATTEND') {  
+                        newAttendCount++;  
+                        newRunningCount++;
+                }
               this.$forceUpdate();
             }
           }
+          this.failCount = newFailCount;
+          this.runningCount = newRunningCount;
+          this.attendCount = newAttendCount;
+          this.totalCount = newTotalCount;
         })
         .catch(error => {
           console.error('Error fetching data:', error);
@@ -179,7 +220,7 @@ export default {
     show_detail(area_table_name) {
       this.active_area_table = area_table_name;
       this.area_detail = [ ... this.area_strus[area_table_name[0]][area_table_name[1]]];
-      if (area_table_name[0] == 'C' || area_table_name[0] == 'I') {
+      if (area_table_name[0] == 'C' || area_table_name[0] == 'I' || area_table_name[0] == 'E') {
         this.area_detail.reverse();
       }
       this.detail_visible = true;
@@ -197,17 +238,18 @@ export default {
   background-color: #898989;
   /* 确保背景色覆盖整个页面 */
   height: 900px;
-  width: 1900px;
+  width: 2200px;
   margin: 0;
   padding: 0;
   align-items: center;
+  
 }
 
 #div-detail {
   position: absolute;
   z-index: 9999;
   height: 900px;
-  width: 1900px;
+  width: 2200px;
   background: #898989;
 }
 
@@ -255,7 +297,7 @@ export default {
 }
 
 .row-son-left {
-  margin-left: 50px;
+  margin-left: 70px;
 }
 
 .table {
@@ -290,6 +332,17 @@ export default {
 .yellow-cell {
   background-color: yellow;
 }
+
+.green-cell {
+  background-color: rgb(28, 227, 28);
+  color: white;
+}
+
+.blue-cell-on {
+  background-color: blue;
+  color: white;
+}
+
 
 .red-cell {
   background-color: red;
