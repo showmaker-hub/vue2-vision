@@ -17,6 +17,7 @@
                 'red-cell': area_values[`${active_area_table}.${col}.${row}`]['prcstat'] == 'FAILED',
                 'blue-cell-on': area_values[`${active_area_table}.${col}.${row}`]['prcstat'] == 'os_power_cycle',
                 'green-cell': area_values[`${active_area_table}.${col}.${row}`]['prcstat'] == 'PASSED',
+                'timeout-cell': area_values[`${active_area_table}.${col}.${row}`]['prcstat'] == 'Timeout',
               }">
                 <div v-if="area_values[`${active_area_table}.${col}.${row}`]['MTSN']">
                   <div>
@@ -76,6 +77,7 @@
                   'red-cell': area_values[`${area_category}${area_table_idx}.${col}.${row}`]['prcstat'] == 'FAILED',
                   'blue-cell-on': area_values[`${area_category}${area_table_idx}.${col}.${row}`]['prcstat'] == 'os_power_cycle',
                   'green-cell': area_values[`${area_category}${area_table_idx}.${col}.${row}`]['prcstat'] == 'PASSED',
+                  'timeout-cell': area_values[`${area_category}${area_table_idx}.${col}.${row}`]['prcstat'] == 'Timeout',
                 }"></td>
               </tr>
             </tbody>
@@ -183,7 +185,7 @@ export default {
       }
     },
     fetchData() {
-      currentUnixTime = Math.floor(Date.now() / 1000); // 获取当前时间的 Unix 时间戳
+     
       let newFailCount = 0;
       let newRunningCount = 0;
       let newAttendCount = 0;
@@ -193,25 +195,35 @@ export default {
         .then(data => {
           this.fillAreaData();
           data = data['data'];
+          let currentUnixTime = Math.floor(Date.now() / 1000); // 获取当前时间的 Unix 时间戳
           for (let i in data) {
             if (data[i]['FAMILY'] == 'xuanwu15') {
               this.area_values[data[i]['FLOOR_LOCATION']] = data[i];
               newTotalCount++;
-              if (data[i]['prcstat'] == 'FAILED') {
+              
+              let mtimeUnix = parseInt(data[i]['mtime'][0]);
+        // 计算当前时间与 mtime 的差异
+              let timeDifference = currentUnixTime - mtimeUnix;
+        // 如果差异超过两个小时，将其标记为 FAILED
+            if (timeDifference > (2 * 60 * 60)) { // 2小时的秒数为 2*60 *60
+            if (data[i]['prcstat'] !== 'PASSED' && data[i]['prcstat'] !== 'ATTEND') {
+                data[i]['prcstat'] = 'Timeout';
                 newFailCount++;
-                } else if (data[i]['prcstat'] == 'RUNNING' || data[i]['prcstat'] == 'os_power_cycle' ) {
-                  newRunningCount++;
-                }
-                if (data[i]['prcstat'] == 'ATTEND') {  
-                        newAttendCount++;  
-                        newRunningCount++;
-                }
+            }
+        } if (data[i]['prcstat'] == 'FAILED') {
+            newFailCount++;
+        } if (data[i]['prcstat'] == 'RUNNING' || data[i]['prcstat'] == 'os_power_cycle' ) {
+            newRunningCount++;
+        } else if (data[i]['prcstat'] == 'ATTEND') {
+            newAttendCount++;
+            newRunningCount++;
+        }
               this.$forceUpdate();
             }
           }
           this.failCount = newFailCount;
-          this.runningCount = newRunningCount;
           this.attendCount = newAttendCount;
+          this.runningCount = newRunningCount;
           this.totalCount = newTotalCount;
         })
         .catch(error => {
@@ -346,6 +358,11 @@ export default {
 
 
 .red-cell {
+  background-color: red;
+  color: white;
+}
+
+.timeout-cell {
   background-color: red;
   color: white;
 }
