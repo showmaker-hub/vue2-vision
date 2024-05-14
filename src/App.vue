@@ -183,9 +183,9 @@ export default {
       }
     },
     fetchData() {
-      let newFailCount = -2;
+      let newFailCount = 0;
       let newRunningCount = 0;
-      let newAttendCount = -2;
+      let newAttendCount = 0;
       let newTotalCount = 0;
       fetch('https://10.189.224.111/svrvision/lssc_l2_rethinkdb_data/')
         .then(response => response.json())

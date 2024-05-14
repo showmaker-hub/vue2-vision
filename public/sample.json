@@ -72,25 +72,5 @@
   "op_passcount": 3,
   "pgmname": "hypwr_off_fvt.py",
   "prcstat": "PASSED"
-},
-{
-  "FAMILY": "xiangyang",
-  "FLOOR_LOCATION": "M2.01.03",
-  "L2_NETWORK_L1_IP": "10.189.226.105",
-  "MONUMBER": "J9BX44303300",
-  "MT": "7DC9",
-  "MTSN": "J901KL0C",
-  "SEO": "7DC9A00WCN",
-  "SONUMBER": "C000069130",
-  "UTP_IP": "10.189.226.105",
-  "UWIP_SN": "1S7DC9CTO1WWJ901KL0C",
-  "current_op": "runin",
-  "mqt1_loops": 1,
-  "mtime": [
-    1712907488.84767,
-    "/dfcxact/mtsn/J901KL0C/utp.lcr"
-  ],
-  "op_passcount": 1,
-  "pgmname": "imm_log.py",
-  "prcstat": "RUNNING"
-}]
+}
+]
