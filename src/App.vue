@@ -183,6 +183,7 @@ export default {
       }
     },
     fetchData() {
+      currentUnixTime = Math.floor(Date.now() / 1000); // 获取当前时间的 Unix 时间戳
       let newFailCount = 0;
       let newRunningCount = 0;
       let newAttendCount = 0;
