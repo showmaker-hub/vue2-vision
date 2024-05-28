@@ -1,5 +1,13 @@
 <template>
-  <div id="app">
+  <div>
+  <div id="login-page" v-if="!loggedIn && !autoLoggedInViaUrl">  
+    <h2 style="font-size: 35px; text-align: center;">请输入账号和密码以访问页面：</h2>
+    <input type="text" placeholder="账号" v-model="username">  
+    <input type="password" placeholder="密码" v-model="password">  
+    <button @click="login">登录</button>  
+    <p v-if="loginError" style="color: red; font-size: 30px;">账号或密码错误，请重新输入</p>
+    </div>  
+  <div id="app" v-show="loggedshow">
     <div id="div-detail" v-if="detail_visible">
       <button @click="hide_detail">返回上级界面</button>
       <div id="table-detail-parent">
@@ -86,6 +94,7 @@
       </div>
     </div>
   </div>
+</div>
 </template>
 
 <script>
@@ -145,6 +154,15 @@ export default {
           '4': 5,
         }
       },
+      username: '',  
+      password: '',  
+      correctUsername: 'aliadmin', // 请将此处替换为您设置的正确账号  
+      correctPassword: '1qazXSW@3edc', // 请将此处替换为您设置的正确密码  
+      loggedIn: false,  
+      loginError: false,  
+      autoLoggedIn: false, // 标识是否通过URL参数自动登录  
+      autoLoggedInViaUrl: false,
+      loggedshow: false,
       area_strus: {},
       area_values: {},
       detail_visible: false,
@@ -154,11 +172,11 @@ export default {
       area_heigh: ['08', '07', '06', '05', '04', '03', '02', '01'],
       failCount: 0,
       runningCount: 0,
-      
     };
   },
 
   created() {
+    this.checkAutoLogin();  
     this.fillAreaData();
   },
   mounted() {
@@ -169,6 +187,32 @@ export default {
     clearInterval(this.interval);
   },
   methods: {
+    checkAutoLogin() {  
+      const queryParams = new URLSearchParams(window.location.search);  
+      const autologin = queryParams.get('autologin');  
+  
+      if (autologin && autologin.toLowerCase() === 'true') {  
+        // 通过URL参数实现了免密登录，直接设置loggedIn为true  
+        this.loggedIn = true;  
+        this.loggedshow = true;
+        this.autoLoggedInViaUrl = true; // 标识是通过URL参数登录的  
+      }  
+    },  
+    login() {  
+      if (this.username === this.correctUsername && this.password === this.correctPassword) {  
+        this.loggedshow = true;
+        this.loggedIn = true;  
+        this.loginError = false;  
+      } else {  
+        this.loginError = true;  
+      }  
+    },  
+    loginSuccess() {  
+      // 模拟登录成功的逻辑  
+      this.loggedIn = true;  
+      this.autoLoggedIn = true; // 可能不需要，因为你已经登录了  
+      // 这里可以添加其他登录成功后的处理逻辑，比如重定向、加载用户数据等  
+    },
     fillAreaData() {
       for (let i in this.area_strus_guide) {
         this.area_strus[i] = {};
@@ -197,7 +241,7 @@ export default {
           data = data['data'];
           let currentUnixTime = Math.floor(Date.now() / 1000); // 获取当前时间的 Unix 时间戳
           for (let i in data) {
-            if (data[i]['FAMILY'] == 'xuanwu15') {
+            if (data[i]['FAMILY'].startsWith('xuanwu')) {
               this.area_values[data[i]['FLOOR_LOCATION']] = data[i];
               newTotalCount++;
               
@@ -246,6 +290,29 @@ export default {
 </script>
 
 <style scoped>
+#login-page {    
+  display: flex;    
+  flex-direction: column;    
+  justify-content: center;    
+  align-items: center;    
+  height: 100vh;    
+  /* 还可以添加一些背景色或其他样式来改善页面外观 */  
+  background-color: #f0f0f0; /* 示例背景色 */  
+}    
+    
+#login-page input {    
+  margin-bottom: 20px;    
+  padding: 20px; /* 增加内边距以增大输入框大小 */  
+  font-size: 24px; /* 调整字体大小 */  
+  width: 400px; /* 可以设置具体的宽度，或者保持默认的宽度让输入框根据内容自适应 */  
+}    
+    
+#login-page button {    
+  padding: 20px 40px; /* 增加内边距以增大按钮大小 */  
+  font-size: 24px; /* 调整字体大小 */  
+  cursor: pointer;    
+}
+
 #app {
   /* 设置背景颜色为灰色 */
   background-color: #898989;
