@@ -241,19 +241,25 @@ export default {
           data = data['data'];
           let currentUnixTime = Math.floor(Date.now() / 1000); // 获取当前时间的 Unix 时间戳
           for (let i in data) {
-            if (data[i]['FAMILY'].startsWith('xuanwu')) {
-              this.area_values[data[i]['FLOOR_LOCATION']] = data[i];
-              newTotalCount++;
+            if (data[i]['FAMILY'] && typeof data[i]['FAMILY'] === 'string' && data[i]['FAMILY'].startsWith('xuanwu')) {
+            this.area_values[data[i]['FLOOR_LOCATION']] = data[i];
+            newTotalCount++;
               
               let mtimeUnix = parseInt(data[i]['mtime'][0]);
         // 计算当前时间与 mtime 的差异
               let timeDifference = currentUnixTime - mtimeUnix;
-        // 如果差异超过两个小时，将其标记为 FAILED
-            if (timeDifference > (2 * 60 * 60)) { // 2小时的秒数为 2*60 *60
-            if (data[i]['prcstat'] !== 'PASSED' && data[i]['prcstat'] !== 'ATTEND') {
-                data[i]['prcstat'] = 'Timeout';
-                newFailCount++;
-            }
+    
+          if (data[i]['prcstat'] === 'os_power_cycle' || data[i]['current_op'] === 'runin' || data[i]['prcstat'] === 'FAILED') {  
+    // 如果是 os_power_cycle 或 current_op 为 runin，则跳过此条目的失败检查  
+      console.log('Skipping failure check for item with prcstat:');  
+        } else if (timeDifference > (2 * 60 * 60)) { // 2小时的秒数为 2*60 *60  
+    // 如果差异超过两个小时，并且prcstat不是PASSED或ATTEND，则标记为FAILED  
+          if (data[i]['prcstat'] !== 'PASSED' && data[i]['prcstat'] !== 'ATTEND') {  
+        data[i]['prcstat'] = 'Timeout';  
+        newFailCount++;  
+    }  
+
+    
         } if (data[i]['prcstat'] == 'FAILED') {
             newFailCount++;
         } if (data[i]['prcstat'] == 'RUNNING' || data[i]['prcstat'] == 'os_power_cycle' ) {
@@ -430,7 +436,7 @@ export default {
 }
 
 .timeout-cell {
-  background-color: red;
+  background-color: #00FFFF;
   color: white;
 }
 </style>
