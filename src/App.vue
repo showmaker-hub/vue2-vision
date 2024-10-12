@@ -210,7 +210,7 @@ export default {
     loginSuccess() {  
       // 模拟登录成功的逻辑  
       this.loggedIn = true;  
-      this.autoLoggedIn = true; // 可能不需要，因为你已经登录了  
+      this.autoLoggedIn = true; // 
       // 这里可以添加其他登录成功后的处理逻辑，比如重定向、加载用户数据等  
     },
     fillAreaData() {
