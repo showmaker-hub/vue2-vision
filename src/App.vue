@@ -210,7 +210,7 @@ export default {
     loginSuccess() {  
       // 模拟登录成功的逻辑  
       this.loggedIn = true;  
-      this.autoLoggedIn = true; // 
+      this.autoLoggedIn = true; // 可能不需要，因为你已经登录了  
       // 这里可以添加其他登录成功后的处理逻辑，比如重定向、加载用户数据等  
     },
     fillAreaData() {
@@ -241,9 +241,10 @@ export default {
           data = data['data'];
           let currentUnixTime = Math.floor(Date.now() / 1000); // 获取当前时间的 Unix 时间戳
           for (let i in data) {
-        if (data[i]['FAMILY'] && typeof data[i]['FAMILY'] === 'string' && /^xuanwu|sudi|chunxiao/.test(data[i]['FAMILY'])) {
-        this.area_values[data[i]['FLOOR_LOCATION']] = data[i];
-        newTotalCount++;
+            if (data[i]['FAMILY'] && typeof data[i]['FAMILY'] === 'string' && data[i]['FAMILY'].startsWith('xuanwu')) {
+            this.area_values[data[i]['FLOOR_LOCATION']] = data[i];
+            newTotalCount++;
+              
               let mtimeUnix = parseInt(data[i]['mtime'][0]);
         // 计算当前时间与 mtime 的差异
               let timeDifference = currentUnixTime - mtimeUnix;
