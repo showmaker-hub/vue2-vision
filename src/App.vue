@@ -141,6 +141,9 @@ export default {
         'K': {
           '2': 4,
         },
+        'R': {
+          '1': 3,
+        },
         'E': {
           '1': 7,
           '2': 8,
@@ -168,7 +171,7 @@ export default {
       detail_visible: false,
       active_area_table: 'H1',
       area_detail: {},
-      area_category_arr: [['B', 'H'], ['C', 'I'], ['D', 'J'], ['E', 'K'], ['F']],
+      area_category_arr: [['B', 'H'], ['C', 'I'], ['D', 'J'], ['E', 'K'],['F','R']],
       area_heigh: ['08', '07', '06', '05', '04', '03', '02', '01'],
       failCount: 0,
       runningCount: 0,
@@ -210,7 +213,7 @@ export default {
     loginSuccess() {  
       // 模拟登录成功的逻辑  
       this.loggedIn = true;  
-      this.autoLoggedIn = true; // 可能不需要，因为你已经登录了  
+      this.autoLoggedIn = true; // 
       // 这里可以添加其他登录成功后的处理逻辑，比如重定向、加载用户数据等  
     },
     fillAreaData() {
@@ -235,16 +238,16 @@ export default {
       let newAttendCount = 0;
       let newTotalCount = 0;
       fetch('https://10.189.224.111/svrvision/lssc_l2_rethinkdb_data/')
+      
         .then(response => response.json())
         .then(data => {
           this.fillAreaData();
           data = data['data'];
           let currentUnixTime = Math.floor(Date.now() / 1000); // 获取当前时间的 Unix 时间戳
           for (let i in data) {
-            if (data[i]['FAMILY'] && typeof data[i]['FAMILY'] === 'string' && data[i]['FAMILY'].startsWith('xuanwu')) {
-            this.area_values[data[i]['FLOOR_LOCATION']] = data[i];
-            newTotalCount++;
-              
+        if (data[i]['FAMILY'] && typeof data[i]['FAMILY'] === 'string' && /^xuanwu|sudi|qiuxun|chunxiao/.test(data[i]['FAMILY'])) {
+        this.area_values[data[i]['FLOOR_LOCATION']] = data[i];
+        newTotalCount++;
               let mtimeUnix = parseInt(data[i]['mtime'][0]);
         // 计算当前时间与 mtime 的差异
               let timeDifference = currentUnixTime - mtimeUnix;
@@ -283,7 +286,7 @@ export default {
     show_detail(area_table_name) {
       this.active_area_table = area_table_name;
       this.area_detail = [ ... this.area_strus[area_table_name[0]][area_table_name[1]]];
-      if (area_table_name[0] == 'C' || area_table_name[0] == 'I' || area_table_name[0] == 'E') {
+      if (area_table_name[0] == 'C' || area_table_name[0] == 'I' || area_table_name[0] == 'R' || area_table_name[0] == 'E') {
         this.area_detail.reverse();
       }
       this.detail_visible = true;

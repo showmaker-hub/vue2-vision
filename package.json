@@ -1,6 +1,6 @@
 {
-  "name": "my-vue-website",
-  "version": "0.1.0",
+  "name": "A1Dashboard",
+  "version": "0.1.9",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
