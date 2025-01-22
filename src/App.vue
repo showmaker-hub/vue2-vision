@@ -11,9 +11,9 @@
     </div>
     <div v-else>
       <div style="position: absolute; top: 10px; left: 10px; z-index: 1000;">
-    <button @click="switchToMain" style="font-size: 20px; padding: 10px 20px;">切换到主界面</button>
-    <button @click="switchTo5F" style="font-size: 20px; padding: 10px 20px;">切换到 5F南区 界面</button>
-    <button @click="switchTo3F" style="font-size: 20px; padding: 10px 20px;">切换到 3F南区 界面</button>
+    <button @click="switchToMain" style="font-size: 15px; padding: 10px 20px;">切换到主界面</button>
+    <button @click="switchTo5F" style="font-size: 15px; padding: 10px 20px;">切换到 5F南区 界面</button>
+    <button @click="switchTo3F" style="font-size: 15px; padding: 10px 20px;">切换到 3F南区 界面</button>
       </div>
       <div v-if="currentView === 'main'">
         <!-- 主界面的内容 -->
@@ -314,16 +314,18 @@ export default {
       this.detail_visible = false;
     },
     adjustScale() {
-  const appContainer = this.$refs.appContainer;
-  const containerWidth = appContainer.offsetWidth; // 使用原始宽度
-  const containerHeight = appContainer.offsetHeight; // 使用原始高度
-  const scaleX = window.innerWidth / containerWidth;
-  const scaleY = window.innerHeight / containerHeight;
-  const scale = Math.min(scaleX, scaleY);
-  appContainer.style.transform = `scale(${scale})`;
-  appContainer.style.transformOrigin = 'top left'; // 确保缩放中心点在左上角
-  appContainer.style.width = `${containerWidth}px`;
-  appContainer.style.height = `${containerHeight}px`;
+    var appContainer = this.$refs.appContainer;
+    var containerWidth = appContainer.offsetWidth;
+    var containerHeight = appContainer.offsetHeight;
+    var scaleX = window.innerWidth / containerWidth;
+    var scaleY = window.innerHeight / containerHeight;
+    var scale = Math.min(scaleX, scaleY);
+    appContainer.style.webkitTransform = 'scale(' + scale + ')';
+    appContainer.style.transform = 'scale(' + scale + ')';
+    appContainer.style.webkitTransformOrigin = 'top left';
+    appContainer.style.transformOrigin = 'top left';
+    appContainer.style.width = containerWidth + 'px';
+    appContainer.style.height = containerHeight + 'px';
 },
     switchToMain() {
       this.currentView = 'main';

@@ -98,7 +98,7 @@ export default {
         [{ key: 7, name: 'S' }, { key: 8, name: 'S' }],
         [{ key: 9, name: 'S' }, { key: 10, name: 'S' }]
       ],
-      area_heigh: ['02', '01'],
+      area_heigh: ['04', '03', '02', '01'],
     };
   },
 
@@ -188,14 +188,18 @@ export default {
       this.detail_visible = false;
     },
     adjustScale() {
-      const appContainer = this.$refs.appContainer;
-      const containerWidth = appContainer.offsetWidth;
-      const containerHeight = appContainer.offsetHeight;
-      const scaleX = window.innerWidth / containerWidth;
-      const scaleY = window.innerHeight / containerHeight;
-      const scaleFactor = 1.5; // 增加缩放因子
-      const scale = Math.min(scaleX, scaleY) * scaleFactor;
-      appContainer.style.transform = `scale(${scale})`;
+      var appContainer = this.$refs.appContainer;
+    var containerWidth = appContainer.offsetWidth;
+    var containerHeight = appContainer.offsetHeight;
+    var scaleX = window.innerWidth / containerWidth;
+    var scaleY = window.innerHeight / containerHeight;
+    var scale = Math.min(scaleX, scaleY);
+    appContainer.style.webkitTransform = 'scale(' + scale + ')';
+    appContainer.style.transform = 'scale(' + scale + ')';
+    appContainer.style.webkitTransformOrigin = 'top left';
+    appContainer.style.transformOrigin = 'top left';
+    appContainer.style.width = containerWidth + 'px';
+    appContainer.style.height = containerHeight + 'px';
     }
   }
 }
